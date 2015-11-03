@@ -1,0 +1,47 @@
+body {
+  font-family: Verdana, Helvetica, sans-serif;
+  background-color: #DDDDDD;
+  font-size: 64px
+}
+
+input {
+  font-family: Verdana, Helvetica, sans-serif;
+  background-color: #FFFFFF;
+  font-size: 64px
+}
+
+textarea {
+  font-family: Verdana, Helvetica, sans-serif;
+  font-size: 128px
+}
+
+textarea.chichar {
+  font-family: Verdana, Helvetica, sans-serif;
+  font-size: 512px
+}
+
+textarea.chartestchichar {
+  font-family: Verdana, Helvetica, sans-serif;
+  font-size: 512px
+}
+
+td {
+  font-family: Verdana, Helvetica, sans-serif;
+  font-size: 64px
+}
+
+div.chichar {
+  font-size: 512px
+}
+
+div.translation {
+  font-size: 128px
+}
+
+div.pronunciation {
+  font-size: 128px
+}
+
+div.space {
+    height: 64px; 
+}
