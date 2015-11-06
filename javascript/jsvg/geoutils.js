@@ -292,7 +292,7 @@ function insertquadtree(tree,c) {
 }
 
 function initquadtree() {
-	return new QuadTree(100000,100000);
+	return new QuadTree(1000,1000);
 }
 
 function circlepoints(c,npoints,angle0) {

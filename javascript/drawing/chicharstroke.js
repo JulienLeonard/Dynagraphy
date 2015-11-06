@@ -1,3 +1,6 @@
+
+
+
 function context(canvasname, w,h) {
 
 	var ccanvas = new chicharcanvas();
@@ -7,6 +10,7 @@ function context(canvasname, w,h) {
 	ccanvas.attachevents();
 
 	var iterframe = function() {
+		
 		ccanvas.fiterstroke();
 		return relaunchloop(true,iterframe);		
 	}

@@ -9,13 +9,17 @@ function Stroke() {
 }
 
 
-function chidrawcircle(canvas,x,y) {
-	console.log("chidrawcircle" + x + y);
-	drawcircle(canvas,circle(x * 10.0,y * 10.0,0.3),Color.prototype.black());
+function chidrawcircle(canvas,p,color,r) {
+	console.log("chidrawcircle" + p.x + p.y);
+
+	x = p.x;
+	y = p.y;
+
+	drawcircle(canvas,circle(x,y,r),color);
 }
 
 var getcenteredcoords = function(canvasframe, e) {
-	console.log("canvasframe",canvasframe);
+	//console.log("canvasframe",canvasframe);
 	var rect = canvasframe.getBoundingClientRect();
 	// var mouseX = e.clientX - rect.left;
 	// var mouseY = e.clientY - rect.top;
@@ -29,7 +33,7 @@ var getcenteredcoords = function(canvasframe, e) {
 	var mouseY = e.pageY-e.target.offsetTop;
 	var x =   (mouseX / canvasframe.width)  * 2 - 1;
 	var y = - (mouseY / canvasframe.height) * 2 + 1;
-	return new Point(x,y);
+	return new Point(x * 10.0,y * 10.0);
 }
 
 
