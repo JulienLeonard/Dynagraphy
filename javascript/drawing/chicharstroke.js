@@ -18,4 +18,4 @@ function context(canvasname, w,h) {
 	return iterframe;
 }
 
-startanim(context("chicharcanvas", 750, 750));
+startanim(context("chicharcanvas", 1000, 1000));

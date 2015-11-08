@@ -72,6 +72,17 @@ chicharcanvas.prototype.ftouchupdrawcircle = function(e) {
 
 	if (startexpansion) {
 		this.buildpatterns();
+
+		//  add a frame to limit the circles. Only in quadtree, not in nodess
+		var framecircle = new Circle(0.0,0.0,15.0);
+		var framecenters = circlepoints(framecircle,3000,0.0);
+		for (var iframe = 0; iframe < framecenters.length; iframe++) {
+			var framecenter  = framecenters[iframe];
+			var cframe = new Circle(framecenter.x, framecenter.y,0.01);
+			insertquadtree(this.quadtree,cframe);
+			chidrawcircle(this.canvas,cframe,Color.prototype.black(),cframe.r);
+			// drawcircle(canvas,cframe,myhsla(0.0,1.0,0.5,1.0));
+		}
 	}
 };
 
@@ -116,9 +127,14 @@ function fdraw(canvas,pattern,lastindex) {
 	var newnode  = pattern.nodes[pattern.nodes.length-1];
 	var lastnode = pattern.nodes[pattern.nodes.length-2];
 
+	//var colorindex = newnode.colorindex;
+	//var factor = 0.1;
+	//var ncolor = myhsla((bidirection(colorindex,(14100*factor)) + 19000*factor)/(34100*factor), 1.0, bidirection(colorindex,(3410*factor))/(3410*1.1*factor),1.0);
+
 	var colorindex = newnode.colorindex;
-	var factor = 0.1;
-	var ncolor = myhsla((bidirection(colorindex,(14100*factor)) + 19000*factor)/(34100*factor), 1.0, bidirection(colorindex,(3410*factor))/(3410*1.1*factor),1.0);
+	var factor = 0.02;
+	// var ncolor = myhsla((((colorindex)%(14100*factor) + 114100*factor/2.0)/(114100*factor)), 1.0, (((colorindex)%(14100*factor))/(14100*factor)),0.75);
+	var ncolor = myhsla((((colorindex)%(14100*factor))/(114100*factor)), 1.0, (((colorindex + 14100*factor * 0.9)%(14100*factor))/(14100*factor)),0.75);
 
 	// console.log("fdraw circle",newnode,"ncolor",ncolor);
 
@@ -128,41 +144,27 @@ function fdraw(canvas,pattern,lastindex) {
 
 chicharcanvas.prototype.createpattern = function(p) {
 	console.log("createpattern",p.x,p.y);
-	var r = 0.05;
+	var r = 0.2;
 	var newnodes = [new Circle(p.x-r,p.y,r),new Circle(p.x+r,p.y,r)];
 
-	if (!checkcollisionquadtree(this.quadtree,newnodes[0],0.001) && !checkcollisionquadtree(this.quadtree,newnodes[1],0.001)) {
-
+	// if (!checkcollisionquadtree(this.quadtree,newnodes[0],0.001) && !checkcollisionquadtree(this.quadtree,newnodes[1],0.001)) {
+	if (true) {
 		var inode = 0;
 		for (inode = 0; inode < newnodes.length; inode++) {
-			// var ncolor = d3.hsl(myrandom()*360.0, 1.0, 0.5);
-			var ncolor = myhsla((1%1600/(1600)), 1.0, 0.5, 1.0);
+			// var ncolor = myhsla((1%1600/(1600)), 1.0, 0.5, 1.0);
 			insertquadtree(this.quadtree,newnodes[inode]);
-			chidrawcircle(this.canvas,newnodes[inode],Color.prototype.rgba(0.5,0.5,0.5,1.0),newnodes[inode].r);
+			chidrawcircle(this.canvas,newnodes[inode],Color.prototype.white(),newnodes[inode].r);
 		}
 
-
-		//  add a frame to limit the circles. Only in quadtree, not in nodess
-		// var framecircle = new Circle(0.0,0.0,2000.0);
-		// var framecenters = circlepoints(framecircle,6000,0.0);
-		// for (var iframe = 0; iframe < framecenters.length; iframe++) {
-		// 	var framecenter  = framecenters[iframe];
-		// 	var cframe = new Circle(framecenter.x, framecenter.y,1.0);
-		// 	insertquadtree(this.quadtree,cframe);
-		// 	// drawcircle(canvas,cframe,myhsla(0.0,1.0,0.5,1.0));
-		// }
-			
-
-		var side = 1.0;
 		var niter = 10;
 		var noffset = 3;
 		var ncircles = [];
 		for (var incircle = noffset; incircle < niter + noffset; incircle++) {
-			ncircles.push(Math.round(incircle * 6.5));
+			ncircles.push(Math.round(incircle * 0.5));
 		}
 		var bside = new BS();
 		for (var incircle = 0; incircle < niter - noffset; incircle++) {
-			bside.push(ncircles[incircle]).alts(samples(1,75,8));
+			bside.push(ncircles[incircle]).alts([5,4,3,2,1,34,9,8,7,6,5,47]);
 			// bside.push(ncircles[incircle]).alts([1]);
 		}
 		var sides = bside.list();
@@ -171,7 +173,7 @@ chicharcanvas.prototype.createpattern = function(p) {
 		for (var incircle = 0; incircle < niter-noffset; incircle++) {
 			var ncircle = ncircles[incircle];
 			// var rsupport = lgeo(1.0,5.0,0.99,ncircle/2);
-			var rsupport = samples(0.05,0.05,29);
+			var rsupport = samples(0.02,0.08,ncircle*2);
 			// console.log("rsupport",rsupport);
 			rsupport = rsupport.concat(lreverse(rsupport));
 			// console.log("after reverse rsupport",rsupport);
@@ -183,8 +185,8 @@ chicharcanvas.prototype.createpattern = function(p) {
 		// console.log("radii ",radii);
 
 		// color: function(lastindex) {return d3.hsl(((lastindex)%(28))/(28)*360.0, 1.0,0.7);},
-		// function(lastindex) {return d3.hsl((100.0 + 50.0*lcircular(sides,lastindex+1)), 1.0,0.7);},
-			   
+		// function(lastindex) {return d3.hsl((100.0 + 50.0*lcircular(sides,lastindex+1)), 1.0,0.7);},			   
+
 		var newpattern = new bpatternbaoswitch(sides,
 											   radii,
 											   newnodes,
@@ -202,7 +204,7 @@ chicharcanvas.prototype.buildpatterns = function() {
 	this.iter = 0;
 	this.maxiter = 10000;
 	this.lastpatternid = 0;
-	this.viewbox0 = this.viewviewbox
+	this.viewbox0 = this.viewviewbox;
 
 	for (var i = 0; i < this.chichar.strokes.length; i++) {
 		var stroke = this.chichar.strokes[i];
