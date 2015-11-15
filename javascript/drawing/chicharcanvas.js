@@ -74,8 +74,9 @@ chicharcanvas.prototype.ftouchupdrawcircle = function(e) {
 		this.buildpatterns();
 
 		//  add a frame to limit the circles. Only in quadtree, not in nodess
-		var framecircle = new Circle(0.0,0.0,15.0);
+		var framecircle = new Circle(0.0,0.0,7.5);
 		var framecenters = circlepoints(framecircle,3000,0.0);
+		// chidrawcircle(this.canvas,framecircle,Color.prototype.black(),framecircle.r);
 		for (var iframe = 0; iframe < framecenters.length; iframe++) {
 			var framecenter  = framecenters[iframe];
 			var cframe = new Circle(framecenter.x, framecenter.y,0.01);
@@ -90,7 +91,7 @@ chicharcanvas.prototype.ftouchupdrawcircle = function(e) {
 chicharcanvas.prototype.fmovedrawcircle = function(e) {
 	if (this.currentstroke) {
 		var p = getcenteredcoords(this.canvasframe,e)
-		if (this.currentstroke.points.length> 0 && dist2(llast(this.currentstroke.points),p) > 0.05) {
+		if (this.currentstroke.points.length> 0 && dist2(llast(this.currentstroke.points),p) > 0.025) {
 			chidrawcircle(this.canvas,p,Color.prototype.black(),0.1);
 			this.currentstroke.points.push(p)
 		}
@@ -131,14 +132,19 @@ function fdraw(canvas,pattern,lastindex) {
 	//var factor = 0.1;
 	//var ncolor = myhsla((bidirection(colorindex,(14100*factor)) + 19000*factor)/(34100*factor), 1.0, bidirection(colorindex,(3410*factor))/(3410*1.1*factor),1.0);
 
-	var colorindex = newnode.colorindex;
-	var factor = 0.02;
+	// var colorindex = newnode.colorindex;
+	// var factor = 0.015;
 	// var ncolor = myhsla((((colorindex)%(14100*factor) + 114100*factor/2.0)/(114100*factor)), 1.0, (((colorindex)%(14100*factor))/(14100*factor)),0.75);
-	var ncolor = myhsla((((colorindex)%(14100*factor))/(114100*factor)), 1.0, (((colorindex + 14100*factor * 0.9)%(14100*factor))/(14100*factor)),0.75);
+	// var ncolor = myhsla((((colorindex)%(14100*factor))/(14100*factor)), 1.0, (((colorindex + 1700*factor * 0.99)%(1700*factor))/(2700*factor)),0.75);
+
+	var colorindex = newnode.colorindex;
+	var factor = 0.0045;
+	var ncolor = myhsla((bidirection(colorindex,(14100*factor)) + 19000*factor)/(34100*factor), 1.0, bidirection(colorindex,(3410*factor))/(3410*1.1*factor),1.0);
+
 
 	// console.log("fdraw circle",newnode,"ncolor",ncolor);
 
-	chidrawcircle(canvas,cscale(newnode,2.0),ncolor,newnode.r*2.0);
+	chidrawcircle(canvas,cscale(newnode,2.0),ncolor,newnode.r*1.0);
 }
 
 
@@ -152,35 +158,35 @@ chicharcanvas.prototype.createpattern = function(p) {
 		var inode = 0;
 		for (inode = 0; inode < newnodes.length; inode++) {
 			// var ncolor = myhsla((1%1600/(1600)), 1.0, 0.5, 1.0);
-			insertquadtree(this.quadtree,newnodes[inode]);
-			chidrawcircle(this.canvas,newnodes[inode],Color.prototype.white(),newnodes[inode].r);
+			insertquadtree(this.quadtree,cscale(newnodes[inode],0.1));
+			chidrawcircle(this.canvas,newnodes[inode],Color.prototype.white(),newnodes[inode].r * 0.1);
 		}
 
-		var niter = 10;
-		var noffset = 3;
-		var ncircles = [];
-		for (var incircle = noffset; incircle < niter + noffset; incircle++) {
-			ncircles.push(Math.round(incircle * 0.5));
-		}
-		var bside = new BS();
-		for (var incircle = 0; incircle < niter - noffset; incircle++) {
-			bside.push(ncircles[incircle]).alts([5,4,3,2,1,34,9,8,7,6,5,47]);
-			// bside.push(ncircles[incircle]).alts([1]);
-		}
-		var sides = bside.list();
+			var niter = 105;
+			var noffset = 3;
+			var ncircles = [];
+			for (var incircle = noffset; incircle < niter + noffset; incircle++) {
+				ncircles.push(Math.round(incircle * 6.5));
+			}
+			var bside = new BS();
+			for (var incircle = 0; incircle < niter - noffset; incircle++) {
+				bside.push(ncircles[incircle]).alts(samples(1,75,8));
+				// bside.push(ncircles[incircle]).alts([1]);
+			}
+			var sides = bside.list();
 
-		var radii = [];
-		for (var incircle = 0; incircle < niter-noffset; incircle++) {
-			var ncircle = ncircles[incircle];
-			// var rsupport = lgeo(1.0,5.0,0.99,ncircle/2);
-			var rsupport = samples(0.02,0.08,ncircle*2);
-			// console.log("rsupport",rsupport);
-			rsupport = rsupport.concat(lreverse(rsupport));
-			// console.log("after reverse rsupport",rsupport);
+			var radii = [];
+			for (var incircle = 0; incircle < niter-noffset; incircle++) {
+				var ncircle = ncircles[incircle];
+				// var rsupport = lgeo(1.0,5.0,0.99,ncircle/2);
+				var rsupport = samples(0.025,0.05,29);
+				// console.log("rsupport",rsupport);
+				rsupport = rsupport.concat(lreverse(rsupport));
+				// console.log("after reverse rsupport",rsupport);
 				
-			// radii = radii.concat(lrandfluctuate(rsupport),0.1);
-			radii = radii.concat(rsupport);
-		}
+				// radii = radii.concat(lrandfluctuate(rsupport),0.1);
+				radii = radii.concat(rsupport);
+			}
 
 		// console.log("radii ",radii);
 
@@ -202,13 +208,19 @@ chicharcanvas.prototype.buildpatterns = function() {
 	this.patterns = []
 	this.quadtree = initquadtree();
 	this.iter = 0;
-	this.maxiter = 10000;
+	this.maxiter = 1000000;
 	this.lastpatternid = 0;
 	this.viewbox0 = this.viewviewbox;
 
 	for (var i = 0; i < this.chichar.strokes.length; i++) {
 		var stroke = this.chichar.strokes[i];
 		for (var j = 0; j < stroke.points.length; j++) {
+			chidrawcircle(this.canvas,stroke.points[j],Color.prototype.white(),1.0);
+		}
+	}
+	for (var i = 0; i < this.chichar.strokes.length; i++) {
+		var stroke = this.chichar.strokes[i];
+		for (var j = 0; j < stroke.points.length; j++) {	
 			var newpattern = this.createpattern(stroke.points[j]);
 			if (newpattern) {
 				this.patterns.push(newpattern);
@@ -219,27 +231,30 @@ chicharcanvas.prototype.buildpatterns = function() {
 
 chicharcanvas.prototype.iterframe = function() {
 
-	console.log("iterframe iter",this.iter);
+	// console.log("iterframe iter",this.iter);
 
-	if (this.iter < this.maxiter && this.patterns.length > 0) {
-		if ((this.iter % 1) == 0) {
-			console.log("iter ",this.iter);
-		}
-		this.lastpatternid += 1;
-		lastpattern = lcircular(this.patterns,this.lastpatternid);
-		result = lastpattern.iter(this.quadtree,this.canvas,100);
+	if (this.iter != undefined)
+	{
+		if (this.iter < this.maxiter && this.patterns.length > 0) {
+			if ((this.iter % 100) == 0) {
+				console.log("iter ",this.iter);
+			}
+			this.lastpatternid += 1;
+			lastpattern = lcircular(this.patterns,this.lastpatternid);
+			result = lastpattern.iter(this.quadtree,this.canvas,10);
 
-		for (var iresult = 0; iresult < result.length; iresult++) {
-			var nnewnode = result[iresult];
-			// this.viewbox0 = mergeviewboxes(circleviewbox(nnewnode),this.viewbox0);
+			for (var iresult = 0; iresult < result.length; iresult++) {
+				var nnewnode = result[iresult];
+				// this.viewbox0 = mergeviewboxes(circleviewbox(nnewnode),this.viewbox0);
+			}
+			// this.iter += result.length;
+			this.iter += 1;
 		}
-		// this.iter += result.length;
-		this.iter += 1;
-	}
 	
-	// var viewviewbox = squareviewbox(expandviewbox(this.viewbox0,3.0));
+		// var viewviewbox = squareviewbox(expandviewbox(this.viewbox0,3.0));
 		
-	resetviewbox(this.canvas,this.viewviewbox);
-
-	return relaunchloop(this.iter < this.maxiter,this.iterframe);
+		resetviewbox(this.canvas,this.viewviewbox);
+		return relaunchloop(this.iter < this.maxiter,this.iterframe);
+	}
+	return false;
 }

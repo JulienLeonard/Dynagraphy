@@ -10,7 +10,7 @@ function Stroke() {
 
 
 function chidrawcircle(canvas,p,color,r) {
-	console.log("chidrawcircle" + p.x + p.y);
+    // console.log("chidrawcircle" + p.x + p.y);
 
 	x = p.x;
 	y = p.y;
