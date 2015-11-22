@@ -149,8 +149,9 @@ function bpatternbaoswitch(sides,nradiuss,inodes,fdraw) {
 		var result    = [];  
 		// var nradiuss = lconcat(samples(1.0,3.0,21),samples(3.0,1.0,21));
 		// var realcollisions = [];
-		
-		for (var isubiter = 0; isubiter < maxnsubiter; isubiter++) {
+
+		var isubiter = 0;
+		while (isubiter < maxnsubiter) {
 				
 			if (lastindex > -1) {
 
@@ -314,8 +315,12 @@ function bpatternbaoswitch(sides,nradiuss,inodes,fdraw) {
 					// maxnsubiter = 3 * nsubiter;
 				} else {
 					lastindex = nodes.length - 1;
+					isubiter += 1;
 				}
 				this.lastindex = lastindex;
+				if (this.lastindex <= 1) {
+					break;
+				}
 			}
 		}
 		return result;

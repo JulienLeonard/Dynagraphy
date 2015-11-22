@@ -27,6 +27,12 @@ Color.prototype.black = function()
 	return Color.prototype.rgba(0.0,0.0,0.0,1.0);
 };
 
+Color.prototype.red = function() 
+{
+	return Color.prototype.rgba(1.0,0.0,0.0,1.0);
+};
+
+
 Color.prototype.HEXtoRGB = function(hex) {
 	return [(hex >> 16 & 0xFF) / 255, ( hex >> 8 & 0xFF) / 255, (hex & 0xFF)/ 255];
 }

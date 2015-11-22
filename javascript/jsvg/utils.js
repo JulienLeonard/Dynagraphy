@@ -183,3 +183,18 @@ function rtrim(vmin,vmax,value) {
 
     return result;
 }
+
+function iff(condition,v1,v2) {
+	if (condition) return v1;
+	return v2;
+}
+
+function lremove(list,v) {
+	result = [];
+	for (var i=0; i < list.length; i++) {
+		if (!(list[i] == v)) {
+			result.push(list[i]);
+		} 
+	}
+	return result;
+}
