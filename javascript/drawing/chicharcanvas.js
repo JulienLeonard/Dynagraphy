@@ -81,7 +81,7 @@ chicharcanvas.prototype.ftouchupdrawcircle = function(e) {
 			var framecenter  = framecenters[iframe];
 			var cframe = new Circle(framecenter.x, framecenter.y,0.01);
 			insertquadtree(this.quadtree,cframe);
-			chidrawcircle(this.canvas,cframe,Color.prototype.black(),cframe.r);
+			// chidrawcircle(this.canvas,cframe,Color.prototype.black(),cframe.r);
 			// drawcircle(canvas,cframe,myhsla(0.0,1.0,0.5,1.0));
 		}
 	}
@@ -137,14 +137,32 @@ function fdraw(canvas,pattern,lastindex) {
 	// var ncolor = myhsla((((colorindex)%(14100*factor) + 114100*factor/2.0)/(114100*factor)), 1.0, (((colorindex)%(14100*factor))/(14100*factor)),0.75);
 	// var ncolor = myhsla((((colorindex)%(14100*factor))/(14100*factor)), 1.0, (((colorindex + 1700*factor * 0.99)%(1700*factor))/(2700*factor)),0.75);
 
-	var colorindex = newnode.colorindex;
-	var factor = 0.0045;
-	var ncolor = myhsla((bidirection(colorindex,(14100*factor)) + 19000*factor)/(34100*factor), 1.0, bidirection(colorindex,(3410*factor))/(3410*1.1*factor),1.0);
+	//var colorindex = newnode.colorindex;
+	//var factor = 0.0045;
+	//var ncolor = myhsla((bidirection(colorindex,(14100*factor)) + 19000*factor)/(34100*factor), 1.0, bidirection(colorindex,(3410*factor))/(3410*1.1*factor),1.0);
 
+    var colorindex = newnode.colorindex;
+	var factor = 1.0;
+	var ncolor = myhsla(((colorindex%100)/100.0), 1.0,0.5,1.0);
+    
 
 	// console.log("fdraw circle",newnode,"ncolor",ncolor);
 
-	chidrawcircle(canvas,cscale(newnode,2.0),ncolor,newnode.r*1.0);
+	// chidrawcircle(canvas,cscale(newnode,2.0),ncolor,newnode.r*1.0);
+	if (arecircletangent(newnode,lastnode)) {
+		rx1 = ccenter(newnode).x;
+		ry1 = ccenter(newnode).y;
+		rx2 = ccenter(lastnode).x;
+		ry2 = ccenter(lastnode).y;
+
+		for (i = 0; i <= 5; i++) {
+			var abscissa = i/5.0;
+			var newx = rx1 + (rx2-rx1) * abscissa;
+			var newy = ry1 + (ry2-ry1) * abscissa;
+            // render.drawcircle(Circle(newx,newy,newnode.r/2.0),ncolor);
+			chidrawcircle(canvas,new Circle(newx,newy,newnode.r/2.0),ncolor,newnode.r/2.0);
+		}
+	}
 }
 
 
@@ -158,8 +176,8 @@ chicharcanvas.prototype.createpattern = function(p) {
 		var inode = 0;
 		for (inode = 0; inode < newnodes.length; inode++) {
 			// var ncolor = myhsla((1%1600/(1600)), 1.0, 0.5, 1.0);
-			insertquadtree(this.quadtree,cscale(newnodes[inode],0.1));
-			chidrawcircle(this.canvas,newnodes[inode],Color.prototype.white(),newnodes[inode].r * 0.1);
+			insertquadtree(this.quadtree,cscale(newnodes[inode],0.75));
+			chidrawcircle(this.canvas,newnodes[inode],Color.prototype.white(),newnodes[inode].r * 0.5);
 		}
 
 			var niter = 105;
@@ -179,7 +197,7 @@ chicharcanvas.prototype.createpattern = function(p) {
 			for (var incircle = 0; incircle < niter-noffset; incircle++) {
 				var ncircle = ncircles[incircle];
 				// var rsupport = lgeo(1.0,5.0,0.99,ncircle/2);
-				var rsupport = samples(0.025,0.05,29);
+				var rsupport = samples(0.1,0.1,10);
 				// console.log("rsupport",rsupport);
 				rsupport = rsupport.concat(lreverse(rsupport));
 				// console.log("after reverse rsupport",rsupport);
