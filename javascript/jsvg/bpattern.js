@@ -42,7 +42,7 @@ function bpatternparrot(inodes) {
 				var side = lastplug.side;
 				var newr = mymax([c1.r,c2.r])*0.99;
 			
-				if (newr > 0.05) {
+				if (newr > 0.005) {
 					var newnode = circles2tangent(c1,"OUT",c2,"OUT",newr,side);
 					if (!checkcollisionquadtree(quadtree,newnode)) {
 						this.nodes.push(newnode);
@@ -50,7 +50,7 @@ function bpatternparrot(inodes) {
 						insertquadtree(quadtree,newnode);
 
 						// var ncolor = d3.hsl(((this.nodes.length + 10)%(600))/(600)*360.0, 1.0, 0.5);
-						var ncolor = myhsla(((this.nodes.length + 10)%(60000))/(60000), 1.0, 0.5,1.0);
+						var ncolor = myhsla(((this.nodes.length + 10)%(600))/(600), 1.0, 0.5,1.0);
 						drawcircle(canvas,circle(newnode.x,newnode.y,newnode.r),ncolor);
 
 						var newfront = [plug(newnode,c1,-side)].concat(this.front.slice(0));

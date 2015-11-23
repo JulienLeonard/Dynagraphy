@@ -91,7 +91,7 @@ chicharcanvas.prototype.ftouchupdrawcircle = function(e) {
 chicharcanvas.prototype.fmovedrawcircle = function(e) {
 	if (this.currentstroke) {
 		var p = getcenteredcoords(this.canvasframe,e)
-		if (this.currentstroke.points.length> 0 && dist2(llast(this.currentstroke.points),p) > 0.025) {
+		if (this.currentstroke.points.length> 0 && dist2(llast(this.currentstroke.points),p) > 0.1) {
 			chidrawcircle(this.canvas,p,Color.prototype.black(),0.1);
 			this.currentstroke.points.push(p)
 		}
@@ -143,7 +143,7 @@ function fdraw(canvas,pattern,lastindex) {
 
     var colorindex = newnode.colorindex;
 	var factor = 1.0;
-	var ncolor = myhsla(((colorindex%100)/100.0), 1.0,bidirection(colorindex + 23,(46*factor))/(46*1.1*factor),1.0);
+	var ncolor = myhsla(((colorindex%100)/1000.0), 1.0,bidirection(colorindex,(50*factor))/(50*1.1*factor),1.0);
     
 
 	// console.log("fdraw circle",newnode,"ncolor",ncolor);
@@ -168,7 +168,7 @@ function fdraw(canvas,pattern,lastindex) {
 
 chicharcanvas.prototype.createpattern = function(p,factor) {
 	console.log("createpattern",p.x,p.y);
-	var r = 0.25;
+	var r = 0.075;
 	var newnodes = [new Circle(p.x-r,p.y,r),new Circle(p.x+r,p.y,r)];
 
 	// if (!checkcollisionquadtree(this.quadtree,newnodes[0],0.001) && !checkcollisionquadtree(this.quadtree,newnodes[1],0.001)) {
@@ -177,34 +177,38 @@ chicharcanvas.prototype.createpattern = function(p,factor) {
 		for (inode = 0; inode < newnodes.length; inode++) {
 			// var ncolor = myhsla((1%1600/(1600)), 1.0, 0.5, 1.0);
 			insertquadtree(this.quadtree,cscale(newnodes[inode],0.5));
-			//chidrawcircle(this.canvas,newnodes[inode],Color.prototype.white(),newnodes[inode].r);
+			chidrawcircle(this.canvas,newnodes[inode],Color.prototype.black(),newnodes[inode].r);
 		}
 
-			var niter = 105;
-			var noffset = 3;
-			var ncircles = [];
-			for (var incircle = noffset; incircle < niter + noffset; incircle++) {
-				ncircles.push(Math.round(incircle * 6.5));
-			}
-			var bside = new BS();
-			for (var incircle = 0; incircle < niter - noffset; incircle++) {
-				bside.push(ncircles[incircle]).alts(samples(1,75,8));
-				// bside.push(ncircles[incircle]).alts([1]);
-			}
-			var sides = bside.list();
+			// var niter = 105;
+			// var noffset = 3;
+			// var ncircles = [];
+			// for (var incircle = noffset; incircle < niter + noffset; incircle++) {
+			// 	ncircles.push(Math.round(incircle * 6.5));
+			// }
+			// var bside = new BS();
+			// for (var incircle = 0; incircle < niter - noffset; incircle++) {
+			// 	bside.push(ncircles[incircle]).alts(samples(1,75,8));
+			// 	// bside.push(ncircles[incircle]).alts([1]);
+			// }
+			// var sides = bside.list();
 
-			var radii = [];
-			for (var incircle = 0; incircle < niter-noffset; incircle++) {
-				var ncircle = ncircles[incircle];
-				// var rsupport = lgeo(1.0,5.0,0.99,ncircle/2);
-				var rsupport = samples(0.05,0.05,10);
-				// console.log("rsupport",rsupport);
-				rsupport = rsupport.concat(lreverse(rsupport));
-				// console.log("after reverse rsupport",rsupport);
+			// var radii = [];
+			// for (var incircle = 0; incircle < niter-noffset; incircle++) {
+			// 	var ncircle = ncircles[incircle];
+			// 	// var rsupport = lgeo(1.0,5.0,0.99,ncircle/2);
+			// 	var rsupport = samples(0.05,0.05,100);
+			// 	// console.log("rsupport",rsupport);
+			// 	rsupport = rsupport.concat(lreverse(rsupport));
+			// 	// console.log("after reverse rsupport",rsupport);
 				
-				// radii = radii.concat(lrandfluctuate(rsupport),0.1);
-				radii = radii.concat(rsupport);
-			}
+			// 	// radii = radii.concat(lrandfluctuate(rsupport),0.1);
+			// 	radii = radii.concat(rsupport);
+			// }
+
+		sides = [1];
+		radii = [0.05]
+
 
 		// console.log("radii ",radii);
 
@@ -215,6 +219,8 @@ chicharcanvas.prototype.createpattern = function(p,factor) {
 											   radii,
 											   newnodes,
 											   fdraw);
+
+			// var newpattern = new bpatternparrot(newnodes);
 
 		return newpattern
 	}
@@ -233,7 +239,7 @@ chicharcanvas.prototype.buildpatterns = function() {
 	for (var i = 0; i < this.chichar.strokes.length; i++) {
 		var stroke = this.chichar.strokes[i];
 		for (var j = 0; j < stroke.points.length; j++) {
-			chidrawcircle(this.canvas,stroke.points[j],Color.prototype.red(),1.0);
+			chidrawcircle(this.canvas,stroke.points[j],Color.prototype.black(),0.1);
 		}
 	}
 	for (var i = 0; i < this.chichar.strokes.length; i++) {
